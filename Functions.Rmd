@@ -1,0 +1,93 @@
+---
+title: "Functions"
+author: "D&D"
+date: "May 25, 2017"
+output: html_document
+---
+
+<div style="text-align: left">
+The data we used was collected by survey and input through a google form, </br>
+because of the fact that it was entered as strings by several people we had to reenter ,</br>
+some of it as well as define some of the columns, as either string or numeric in MS Excel. </br>
+once loaded we named it:
+
+```{r}
+library(shiny)
+library(shinythemes)
+library(markdown)
+library(curl)
+library(ggplot2)
+library(dplyr)
+library(leaflet)
+library(reshape2)
+
+# setwd("C:\\Users\\Dror Bogin\\Desktop\\University\\Geogeraphy\\seminar_diana\\app_test")
+
+socio <- read.csv("SOCIO.csv", header = TRUE, stringsAsFactors = TRUE)
+physical <- read.csv("PHYSICAL.csv", header = TRUE, stringsAsFactors = TRUE)
+physical <- physical[,1:7]
+pay <- read.csv("PAY_EILAT.csv", header = TRUE, stringsAsFactors = TRUE)
+
+names(socio) <- c("ID", "num_res", "subten", "sex_1","age_1", "edu_1", "work_1","sex_2","age_2", "edu_2", "work_2", "kids_num","kids_age", "income", "notes")
+names(physical) <- c("ID","glaz", "shutter", "hou_size","hea", "mon_hea", "dur_hea")
+names(pay) <- c("ID","AM_FIRST_PAY","START_FIRST_PAY","END_FIRST_PAY","AM_SEC_PAY","START_SEC_PAY","END_SEC_PAY","AM_THIRD_PAY","START_THIRD_PAY","END_THIRD_PAY")
+```
+
+We then calculated the elecricty consumption per household by the ammount they payed, </br>
+this was done using Dplyr's mutate function while considering each possible date for</br>
+electric bill as the fixed payment changes between months while the variable payment is</br>
+allways an added 17%, here is and example for one of the consumption in KW columns created. </br>
+a total of three such columns were created:
+
+```{r}
+pay <- mutate(pay, kw1 = if_else(pay$START_FIRST_PAY == "2016-07-01", (((pay$AM_FIRST_PAY - 26.89)-((pay$AM_FIRST_PAY*100/117)*0.17))/0.4558),if_else(pay$START_FIRST_PAY == "2016-09-01", (((pay$AM_FIRST_PAY - 25.07)-((pay$AM_FIRST_PAY*100/117)*0.17))/0.4558),if_else(pay$START_FIRST_PAY == "2016-11-01", (((pay$AM_FIRST_PAY - 26.43)-((pay$AM_FIRST_PAY*100/117)*0.17))/0.4558),if_else(pay$START_FIRST_PAY == "2017-01-01", (((pay$AM_FIRST_PAY - 31.81)-((pay$AM_FIRST_PAY*100/117)*0.17))/0.4726),0)))))
+```
+
+
+
+
+
+</br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+

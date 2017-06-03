@@ -1,0 +1,5 @@
+we have seen that R^2 is not allways meaningfull even when the plots
+have shown to have meaning.
+while that may be troubeling we have to remember that total data collection for
+this project produced only 93 observations and after subseting by dates
+and omiting NA's we ended up analysing around 30 observations per date.

@@ -5,7 +5,10 @@ date: "June 14, 2017"
 output: html_document
 ---
 
-This is our project script, complete with notes and ready to run.
+This is our project script, complete with notes and ready to run.</br>
+
+The project was also uploaded to ```Github``` and is available in this <a href = "https://github.com/bogind/proj1_Dman">link </a>
+
 
 ```{r}
 library(shiny)

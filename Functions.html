@@ -125,7 +125,7 @@ $(document).ready(function () {
 
 
 <p>
-The data we used was collected by survey and input through a google form, </br> because of the fact that it was entered as strings by several people we had to reenter ,</br> some of it as well as define some of the columns, as either string or numeric in MS Excel. </br> once loaded we filtered some errors created by MS Excel using <code>filter</code> </br> and named the data:
+The data we used was collected by survey and input through a google form, </br> because of the fact that it was entered as strings by several people we had to reenter ,</br> some of it as well as define some of the columns, as either string or numeric in MS Excel. </br> once loaded we filtered some errors created by MS Excel using <code>filter()</code>.</br> and named the data:
 </p>
 <pre class="r"><code>library(shiny)
 library(shinythemes)
@@ -170,7 +170,7 @@ ID &lt;- 1:length(input$ID)
 input1 &lt;- data.frame(ID)
 input1[,2:13] &lt;- colsplit(input$mon_hea,&quot;,&quot;, names = c(&quot;X1&quot;,&quot;X2&quot;,&quot;X3&quot;,&quot;X4&quot;,&quot;X5&quot;,&quot;X6&quot;,&quot;X7&quot;,&quot;X8&quot;,&quot;X9&quot;,&quot;X10&quot;,&quot;X11&quot;,&quot;X12&quot;))
 </code></pre>
-We then populated the mondata data frame using an <code>ifelse()</code> statement checking the value of </br> the corresponding cell in the input1 data frame. </br> the statement checks for the existence of the selected month in each of the cells within that ID row. </br> it does so by comparing it to a <a href="http://www.regular-expressions.info/"><em>REGEX</em></a> expression using the <code>base::grepl</code> function, </br> to check if it contains that specific month. </br> we have run 12 variations on that statement, 1 for each month. </br> </br> example of the statement:
+We then populated the mondata data frame using an <code>ifelse()</code> statement checking the value of </br> the corresponding cell in the input1 data frame. </br> the statement checks for the existence of the selected month in each of the cells within that ID row. </br> it does so by comparing it to a <a href="http://www.regular-expressions.info/"><em>REGEX</em></a> expression using the <code>base::grepl()</code> function, </br> to check if it contains that specific month. </br> we have run 12 variations on that statement, 1 for each month. </br> </br> example of the statement:
 </p>
 <pre class="r"><code>mondata[,2] &lt;- ifelse(grepl(&quot;^1$&quot;,input1$X1,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X2,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X3,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X4,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X5,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X6,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X7,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X8,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X9,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X10,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X11,ignore.case = TRUE)|grepl(&quot;^1$&quot;,input1$X12,ignore.case = TRUE),1,0)
 </code></pre>
@@ -228,6 +228,9 @@ lm6 &lt;- lm(data = eilatjanfeb, formula = kw1~hou_size, na.action = na.omit)
 summary(lm6)
 lm7 &lt;- lm(data = eilatjanfeb, formula = ConsumpPerCap1~hou_size, na.action = na.omit)
 summary(lm7)</code></pre>
+<p>
+the rest of the script was used to create the <b>ShinyApp</b> and is included in slide 7. </br> it includes the plots you will see in slides 3-5, the map in slide 5, </br> and the connection to the <b>Rmarkdown</b> files which were used to create the text. </br>
+</p>
 <p></br></p>
 
 

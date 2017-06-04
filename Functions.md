@@ -9,7 +9,7 @@ output:  html_document
 The data we used was collected by survey and input through a google form, </br>
 because of the fact that it was entered as strings by several people we had to reenter ,</br>
 some of it as well as define some of the columns, as either string or numeric in MS Excel. </br>
-once loaded we filtered some errors created by MS Excel using ```filter``` </br> 
+once loaded we filtered some errors created by MS Excel using ```filter()```.</br> 
 and named the data:
 </p>
 
@@ -74,7 +74,7 @@ input1[,2:13] <- colsplit(input$mon_hea,",", names = c("X1","X2","X3","X4","X5",
 We then populated the mondata data frame using an ```ifelse()``` statement checking the value of </br>
 the corresponding cell in the input1 data frame. </br>
 the statement checks for the existence of the selected month in each of the cells within that ID row. </br>
-it does so by comparing it to a <a href ="http://www.regular-expressions.info/">*REGEX*</a> expression using the ```base::grepl``` function, </br>
+it does so by comparing it to a <a href ="http://www.regular-expressions.info/">*REGEX*</a> expression using the ```base::grepl()``` function, </br>
 to check if it contains that specific month. </br>
 we have run 12 variations on that statement, 1 for each month. </br>
 </br>
@@ -163,7 +163,7 @@ summary(lm7)
 <p>
 the rest of the script was used to create the <b>ShinyApp</b> and is included in slide 7. </br>
 it includes the plots you will see in slides 3-5, the map in slide 5, </br>
-and the connection to the ```Rmarkdown``` files which were used to create the text. </br>
+and the connection to the <b>Rmarkdown</b> files which were used to create the text. </br>
 </p>
 </br>
 

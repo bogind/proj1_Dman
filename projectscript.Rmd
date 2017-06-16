@@ -173,8 +173,7 @@ ui= tagList(
                       fluidRow(column(3),column(4,verbatimTextOutput('lm2')),column(4)),
                       fluidRow(column(3),column(4,verbatimTextOutput('lm3')),column(4))
 
-
-                
+    
              ),
 tabPanel("Interactive Plots - Slide 5",  h2("Interactive Plots + leaflet map"),
          h4("you can change the variables on the selection panel and see them plot out in ggplot or graphics regular plot"),
@@ -358,6 +357,8 @@ output$table1 <- renderTable({
 
 
 shinyApp(ui,server)
+
+
 
 ```
 

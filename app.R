@@ -7,6 +7,7 @@ library(ggplot2)
 library(dplyr)
 library(leaflet)
 library(reshape2)
+library(NCmisc)
 
 
 #####
@@ -114,6 +115,9 @@ lm7 <- lm(data = eilatjanfeb, formula = ConsumpPerCap1~hou_size, na.action = na.
 summary(lm7)
 
 
+los <- loess(formula = kw1~hou_size,data = eilatjanfeb )
+
+
 
 ############## U.I ##############
 
@@ -138,10 +142,10 @@ ui= tagList(
                       fluidRow(),
                       includeMarkdown("basic_stats.md"),
                       h3("Plots"),
-                      fluidRow(column(8,verbatimTextOutput('text3.5')),
-                      column(8,plotOutput('plot3'))),
-                      fluidRow(column(6,verbatimTextOutput('text5')),column(6,verbatimTextOutput('text6'))),
-                      fluidRow(column(6,plotOutput('plot5')),column(6,plotOutput('plot6'))),
+                      fluidRow(column(8,verbatimTextOutput('text1')),
+                      column(8,plotOutput('plot1'))),
+                      fluidRow(column(6,verbatimTextOutput('text2')),column(6,verbatimTextOutput('text3'))),
+                      fluidRow(column(6,plotOutput('plot2')),column(6,plotOutput('plot3'))),
                       fluidRow(),
                       fluidRow()
                       
@@ -150,10 +154,10 @@ ui= tagList(
                       h2("Advanced Analysis"),
                       fluidRow(),
                       includeMarkdown("Analysis.md"),
-                      fluidRow(column(6,verbatimTextOutput('text4')),column(6,verbatimTextOutput('text11'))),
-                      fluidRow(column(6,plotOutput('plot4')),column(6,plotOutput('plot11'))),
-                      fluidRow(column(6,verbatimTextOutput('text7')),column(6,verbatimTextOutput('text10'))),
-                      fluidRow(column(6,plotOutput('plot7')),column(6,plotOutput('plot10'))),
+                      fluidRow(column(6,verbatimTextOutput('text4')),column(6,verbatimTextOutput('text5'))),
+                      fluidRow(column(6,plotOutput('plot4')),column(6,plotOutput('plot5'))),
+                      fluidRow(column(6,verbatimTextOutput('text6')),column(6,verbatimTextOutput('text7'))),
+                      fluidRow(column(6,plotOutput('plot6')),column(6,plotOutput('plot7'))),
                       fluidRow(column(6,verbatimTextOutput('text8')),column(6,verbatimTextOutput('text9'))),
                       fluidRow(column(6,plotOutput('plot8')),column(6,plotOutput('plot9'))),
                       fluidRow(column(3),column(4,verbatimTextOutput('lm1')),column(4)),
@@ -170,15 +174,15 @@ tabPanel("Interactive Plots - Slide 5",  h2("Interactive Plots + leaflet map"),
            selectInput('ycol', 'Y Variable', names(new_dataclean),
                        selected=names(new_dataclean)[[2]]),
            
-           tabPanel("Text1", verbatimTextOutput('text1'))
+           tabPanel("Text10", verbatimTextOutput('text10'))
            ,
-           tabPanel("Text2", verbatimTextOutput('text2')),
-           tabPanel("Text3",verbatimTextOutput('text3') )
+           tabPanel("Text11", verbatimTextOutput('text11')),
+           tabPanel("Text12",verbatimTextOutput('text12') )
          ),
          mainPanel(tabsetPanel("plot Types",tabPanel("GGplot",
-           plotOutput('plot2')),
+           plotOutput('plot11')),
            tabPanel("Graphics adaptive", 
-                    plotOutput('plot1')
+                    plotOutput('plot10')
                     )
          )
          ),
@@ -187,7 +191,7 @@ tabPanel("Interactive Plots - Slide 5",  h2("Interactive Plots + leaflet map"),
           tabPanel("Summary - Slide 6", 
          titlePanel("So, in summary..."), 
          fluidRow(
-           column(8, includeText("summary.txt"))
+           column(8, includeMarkdown("summary.md"))
          )
 ),
         tabPanel("Our script - Slide 7",
@@ -235,54 +239,63 @@ server = function(input, output, session) {
   })
 
   output$plot1 <- renderPlot({
-  palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
-  "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
-
-    par(mar = c(5.1, 4.1, 0, 1))
-    plot(selectedData(),
-         col = rainbow(7),
-         pch = 20, cex = 3)
+    ggplot()+
+      geom_bar(aes(x = eilat$incomelevel, fill = eilat$incomelevel)) +
+      labs(fill='Legend', labels = lev2, x = "Income level", y = "Count") 
   })
-  #plotting function using ggplot2
-   output$plot2 <- renderPlot({
-     ggplot(selectedData(),aes(x=selectedData()[,input$xcol],y=selectedData()[,input$ycol], colour = selectedData()[,input$xcol]),height = 400,width = 600)+geom_point()+ xlab(input$xcol)+ ylab(input$ycol)+labs(colour=input$xcol)
-  })
-   
-   output$plot3 <- renderPlot({
-     ggplot()+
-     geom_bar(aes(x = eilat$incomelevel, fill = eilat$incomelevel)) +
-     labs(fill='Legend', labels = lev2, x = "Income level", y = "Count") 
-   })
-   
-   output$plot4 <- renderPlot({
-        ggplot(lm6$model, aes_string(x = names(lm6$model)[2], y = names(lm6$model)[1])) + 
-       stat_smooth(method = "loess", col = "red") + geom_point() + labs(y = "Consumption", x = "House size")
-   }) 
   
-   output$plot5<-renderPlot({
+  
+  output$plot2<-renderPlot({
     
-     df <- as.data.frame(table(eilat$hou_type))
-     ggplot()+
-       geom_bar(aes(x=eilat$hou_type, fill = eilat$incomelevel)) +
-       labs(fill = 'Legend', x = "House Type", y = "Count") + geom_text(data = df, aes(x = Var1, y = Freq-10, label = Freq))
-   })
-   
-   output$plot6<-renderPlot({
-     a <- as.data.frame(c(eilat$edu_1,eilat$edu_2))
-     a <- filter(a, !is.na(a))
-     t <- as.data.frame(table(a))
-     names(a) <- "education"
-     t$a <- factor(t$a, labels = c("Highschool Graduate", "Academic Degree"))
-     ggplot(data = t, aes(x = a))+geom_bar(aes(y = Freq, fill = t$a),stat="identity") + 
-       labs(fill = 'Legend', x = "Education Type", y = "Count") + 
-       geom_text(data = t, aes(x = a, y = Freq-16, label = Freq))
-   })
+    df <- as.data.frame(table(eilat$hou_type))
+    ggplot()+
+      geom_bar(aes(x=eilat$hou_type, fill = eilat$incomelevel)) +
+      labs(fill = 'Legend', x = "House Type", y = "Count") + geom_text(data = df, aes(x = Var1, y = Freq-10, label = Freq))
+  })
+  
+  
+  output$plot3<-renderPlot({
+    a <- as.data.frame(c(eilat$edu_1,eilat$edu_2))
+    a <- filter(a, !is.na(a))
+    t <- as.data.frame(table(a))
+    names(a) <- "education"
+    t$a <- factor(t$a, labels = c("Highschool Graduate", "Academic Degree"))
+    ggplot(data = t, aes(x = a))+geom_bar(aes(y = Freq, fill = t$a),stat="identity") + 
+      labs(fill = 'Legend', x = "Education Type", y = "Count") + 
+      geom_text(data = t, aes(x = a, y = Freq-16, label = Freq))
+  })
+  
+  output$plot4 <- renderPlot({
+    ggplot(lm6$model, aes_string(x = names(lm6$model)[2], y = names(lm6$model)[1])) + 
+      stat_smooth(method = "loess", col = "red") + geom_point() + labs(y = "Consumption", x = "House size")
+  }) 
+  
+  
+  output$plot5 <- renderPlot({
+    ggplot(lm7$model, aes_string(x = names(lm7$model)[2], y = names(lm7$model)[1])) + 
+      stat_smooth(method = "loess", col = "blue") + geom_point() + labs(y = "Consumption per capita", x = "House size")
+  }) 
+  
+  
+  
+  output$plot6 <- renderPlot({
+    ggplot(lm1$model, aes_string(x = names(lm1$model)[1], y = names(lm1$model)[2])) +   
+      stat_smooth(method = "loess", col = "red") +
+      geom_point() + labs(y = "Consumption", x = "Number of Residents")
+  })
+  
+  
+ 
    
    output$plot7 <- renderPlot({
-  ggplot(lm1$model, aes_string(x = names(lm1$model)[1], y = names(lm1$model)[2])) +   
-       stat_smooth(method = "loess", col = "red") +
-       geom_point() + labs(y = "Consumption", x = "Number of Residents")
-   })
+     ggplot(lm2$model, aes_string(x = names(lm2$model)[1], y = names(lm2$model)[2])) +   
+       stat_smooth(method = "loess", col = "blue") +
+       geom_point() + labs(y = "Consumption per Capita", x = "Number of Residents")
+   })  
+  
+  
+   
+  
 
    output$plot8 <- renderPlot({
      ggplot(data = eilatjanfeb[!is.na(eilatjanfeb$incomelevel),],aes(incomelevel,kw1)) + geom_boxplot(aes(group = incomelevel, color = incomelevel)) + labs(x = "Income Level", y = "Elec. consumption", color = "Legend")
@@ -292,30 +305,37 @@ server = function(input, output, session) {
      ggplot(data = eilat,aes(hou_type,hou_size)) + geom_boxplot(aes(group = hou_type, fill = hou_type)) + labs(x = "House Type", y = "House Size", fill = "Legend")
    })
      
+   
    output$plot10 <- renderPlot({
-     ggplot(lm2$model, aes_string(x = names(lm2$model)[1], y = names(lm2$model)[2])) +   
-       stat_smooth(method = "loess", col = "blue") +
-       geom_point() + labs(y = "Consumption per Capita", x = "Number of Residents")
+     palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
+               "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
+     par(mar = c(5.1, 4.1, 0, 1))
+     plot(selectedData(),
+          col = rainbow(7),
+          pch = 20, cex = 3)
+   })
+   #plotting function using ggplot2
+   output$plot11 <- renderPlot({
+     ggplot(selectedData(),aes(x=selectedData()[,input$xcol],y=selectedData()[,input$ycol], colour = selectedData()[,input$xcol]),height = 400,width = 600)+geom_point()+ xlab(input$xcol)+ ylab(input$ycol)+labs(colour=input$xcol)
    })
    
-   output$plot11 <- renderPlot({
-     ggplot(lm7$model, aes_string(x = names(lm7$model)[2], y = names(lm7$model)[1])) + 
-       stat_smooth(method = "loess", col = "blue") + geom_point() + labs(y = "Consumption per capita", x = "House size")
-   }) 
    
-   
-  output$text1 <- renderText(paste("number of observations: ", nrow(df())))
-  output$text2 <- renderText(paste("R Squared for X ~ Y: ",summary(lm(df()[,input$xcol]~df()[,input$ycol]))$r.squared))
-  output$text3 <- renderText(paste("*Note: if R^2 is NA switch between X and Y" ))
-  output$text3.5 <- renderText(paste("Distribution of income level" ))
-  output$text4 <- renderText(paste("Elecricity consumption over house size" ))
-  output$text5 <- renderText(paste("House type" ))
-  output$text6 <- renderText(paste("Education types" ))
-  output$text7 <- renderText(paste("Consumption over number of residents"))
-  output$text8 <- renderText(paste("Income Level"))
-  output$text9 <- renderText(paste("Houses type compared to house size"))
-  output$text10 <- renderText(paste("Consumption per capita over number of residents"))
-  output$text11 <- renderText(paste("Elecricity consumption per capita over house size"))
+ 
+   output$text1 <- renderText(paste("Plot 1 - Distribution of income level" ))   
+   output$text2 <- renderText(paste("Plot 2 - House type" ))
+   output$text3 <- renderText(paste("Plot 3 - Education types" ))
+ 
+  output$text4 <- renderText(paste("Plot 4 - Elecricity consumption over house size" ))
+  output$text5 <- renderText(paste("Plot 5 - Elecricity consumption per capita over house size"))
+  output$text6 <- renderText(paste("Plot 6 - Consumption over number of residents"))
+  output$text7 <- renderText(paste("Plot 7 - Consumption per capita over number of residents"))
+  output$text8 <- renderText(paste("Plot 8 - Income Level"))
+  output$text9 <- renderText(paste("Plot 9 - Houses type compared to house size"))
+  
+  output$text10 <- renderText(paste("number of observations: ", nrow(df())))
+  output$text11 <- renderText(paste("R Squared for X ~ Y: ",summary(lm(df()[,input$xcol]~df()[,input$ycol]))$r.squared))
+  output$text12 <- renderText(paste("*Note: if R^2 is NA switch between X and Y" ))
+  
   output$lm1 <- renderPrint(summary(lm3))
   output$lm2 <- renderPrint(summary(lm4))
   output$lm3 <- renderPrint(summary(lm5))

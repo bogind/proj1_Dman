@@ -41,7 +41,6 @@ Although the plots show good visual influence on electricity the significance of
 <div title = 'count = 1:"themeSelector"'>shinythemes</div>
 <div title = 'count = 1:"list.functions.in.file", that was used to make this list'>NCmisn</div></b></br>
 * However most of the functions we used are from the<div title = 'base, graphics, grDevices,stats & utils.'><b> R core</div></b> packages.
-<div title = 'base, graphics, grDevices,stats & utils.>
 </p>
 </br></br>
 <h3>Bibliography:</h3>
@@ -52,7 +51,5 @@ Although the plots show good visual influence on electricity the significance of
 <a href = https://doi.org/10.1196/annals.1439.003> 3. MEA. (2005). Ecosystems and human well-being. Ecosystems (Vol. 5).</a> </br>
 <a href = https://doi.org/10.1016/j.enbuild.2006.11.001> 4. Santamouris, M., Kapsis, K., Korres, D., Livada, I., Pavlou, C., & Assimakopoulos, M. N. (2007). On the relation between the energy and social characteristics of the residential sector. Energy and Buildings, 39(8), 893–905. </a></br>
 <a href = https://doi.org/10.1016/j.enbuild.2007.09.001> 5. Yohanis, Y. G., Mondol, J. D., Wright, A., & Norton, B. (2008). Real-life energy use in the UK: How occupancy and dwelling characteristics affect domestic electricity use. Energy and Buildings, 40(6), 1053–1059.</a> </br>
-
 </p>
-</br></br></br></br></br></br>
-
+</br></br></br>

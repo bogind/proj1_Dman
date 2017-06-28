@@ -125,7 +125,7 @@ los <- loess(formula = kw1~hou_size,data = eilatjanfeb )
 
 ui= tagList(
   shinythemes::themeSelector(),
-  navbarPage("Data Management Project D&D",
+  navbarPage("Data Management Project Dror Bogin & Diana khodnev",
                tabPanel("Introduction - Slide 1", 
                         fluidRow(
                           column(8, includeMarkdown("intro.md"))
